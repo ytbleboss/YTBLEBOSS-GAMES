@@ -1,0 +1,63 @@
+name: 🎮 YTBLEBOSS GAMES - Build EXE
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+
+      - name: 📥 Récupérer le projet
+        uses: actions/checkout@v4
+
+      - name: 🟢 Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          package-manager-cache: false
+
+      - name: 🔍 Vérifier package.json
+        shell: powershell
+        run: |
+          Write-Host "===== PACKAGE.JSON ====="
+          Get-Content package.json
+          Write-Host "========================"
+
+      - name: 📦 Installer les dépendances
+        run: npm install --no-audit --no-fund
+
+      - name: 🔍 Vérifier Electron Builder
+        run: npx electron-builder --version
+
+      - name: 🔨 Construire le EXE
+        shell: powershell
+        run: |
+          npm run build 2>&1 | Tee-Object build-log.txt
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "===== LOG COMPLET ====="
+            Get-Content build-log.txt
+            exit $LASTEXITCODE
+          }
+
+      - name: 📁 Vérifier le dossier dist
+        shell: powershell
+        run: |
+          Write-Host "===== DIST ====="
+          if (Test-Path dist) {
+            Get-ChildItem dist -Recurse
+          } else {
+            Write-Host "Le dossier dist n'existe pas."
+            exit 1
+          }
+
+      - name: 📤 Récupérer le EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: YTBLEBOSS-GAMES-WINDOWS
+          path: dist/*.exe
+          if-no-files-found: error
