@@ -1,0 +1,42 @@
+name: 🎮 YTBLEBOSS GAMES - EXE
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+
+      - name: 📥 Récupérer le projet
+        uses: actions/checkout@v4
+
+      - name: 🟢 Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          package-manager-cache: false
+
+      - name: 🔍 Vérifier les fichiers
+        shell: powershell
+        run: |
+          Write-Host "===== FICHIERS DU PROJET ====="
+          Get-ChildItem -Force
+          Write-Host "=============================="
+
+      - name: 📦 Installer les dépendances
+        run: npm install
+
+      - name: 🔨 Construire le EXE
+        run: npm run build
+
+      - name: 📤 Publier le EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: YTBLEBOSS-GAMES-WINDOWS
+          path: dist/*.exe
+          if-no-files-found: error
