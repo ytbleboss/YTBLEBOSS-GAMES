@@ -1,0 +1,53 @@
+{
+  "name": "ytbleboss-games",
+  "version": "1.0.0",
+  "description": "YTBLEBOSS GAMES - portail de jeux",
+  "main": "main.js",
+  "author": "YTBLEBOSS",
+  "license": "MIT",
+
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win nsis"
+  },
+
+  "devDependencies": {
+    "electron": "38.1.0",
+    "electron-builder": "26.0.12"
+  },
+
+  "build": {
+    "appId": "com.ytbleboss.games",
+    "productName": "YTBLEBOSS GAMES",
+
+    "directories": {
+      "output": "dist"
+    },
+
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html"
+    ],
+
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "YTBLEBOSS GAMES",
+      "uninstallDisplayName": "YTBLEBOSS GAMES"
+    }
+  }
+}
