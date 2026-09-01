@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YTBLEBOSS GAMES 🎮</title>
+
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Arial,sans-serif;color:#fff}
+body{
+background:
+radial-gradient(circle at 20% 0,#123d70 0,transparent 35%),
+radial-gradient(circle at 90% 100%,#45105f 0,transparent 35%),
+#050812;
+}
+header{
+position:sticky;top:0;z-index:20;
+display:flex;align-items:center;gap:18px;
+padding:15px 4%;
+background:#050b16e8;
+backdrop-filter:blur(18px);
+border-bottom:1px solid #ffffff18
+}
+.logo{
+font-size:25px;font-weight:1000;color:#4fcaff;
+text-shadow:0 0 20px #159fe9;
+white-space:nowrap
+}
+.logo span{color:white}
+nav{display:flex;gap:8px;flex:1;justify-content:center}
+button{
+border:0;border-radius:12px;padding:11px 15px;
+background:#12243a;color:#fff;font-weight:800;
+cursor:pointer;transition:.2s
+}
+button:hover{transform:translateY(-2px);background:#1d4268}
+.active{background:#149fe9}
+.search{
+width:250px;padding:12px 15px;border-radius:12px;
+border:1px solid #ffffff18;outline:0;
+background:#0b1626;color:white
+}
+main{width:min(1300px,92%);margin:auto;padding:35px 0}
+.hero{
+padding:50px;border-radius:30px;
+background:
+linear-gradient(135deg,#104d80dd,#10182bdd),
+radial-gradient(circle at 80% 20%,#814cff,transparent 35%);
+border:1px solid #ffffff18;
+box-shadow:0 30px 80px #0009;
+overflow:hidden
+}
+.hero h1{
+font-size:clamp(42px,7vw,78px);
+line-height:.95;margin:0 0 20px
+}
+.hero p{
+max-width:750px;color:#b9cce0;
+font-size:18px;line-height:1.6
+}
+.hero button{margin-top:20px;background:#159fe9}
+.stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:15px;margin-top:25px
+}
+.stat{
+padding:20px;border-radius:18px;
+background:#0c1727;border:1px solid #ffffff12
+}
+.stat b{font-size:28px;color:#55cbff}
+.toolbar{
+display:flex;gap:10px;flex-wrap:wrap;
+margin-top:30px
+}
+.category.activeCat{background:#159fe9}
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+gap:18px;margin-top:20px
+}
+.card{
+background:linear-gradient(145deg,#101d30,#080e19);
+border:1px solid #ffffff12;
+border-radius:20px;overflow:hidden;
+box-shadow:0 15px 40px #0007;
+transition:.25s
+}
+.card:hover{
+transform:translateY(-7px);
+border-color:#28baff77
+}
+.cover{
+height:150px;
+display:grid;place-items:center;
+font-size:65px;
+background:
+radial-gradient(circle,#ffffff2a,transparent 30%),
+linear-gradient(135deg,var(--a),var(--b))
+}
+.body{padding:17px}
+.body h3{margin:0 0 7px}
+.body p{color:#91a6bd;font-size:13px;min-height:38px}
+.play{width:100%;margin-top:12px;background:#159fe9}
+.fav{
+float:right;
+background:#18263a;
+padding:7px 10px
+}
+#player{
+display:none;
+position:fixed;
+inset:0;
+z-index:100;
+background:#03060c
+}
+.playerHead{
+height:65px;
+display:flex;
+align-items:center;
+gap:10px;
+padding:10px 15px;
+background:#08111f;
+border-bottom:1px solid #ffffff15
+}
+.playerTitle{font-weight:900;flex:1}
+#frame{
+width:100%;
+height:calc(100vh - 65px);
+border:0;
+background:#000
+}
+.loading{
+position:absolute;
+inset:65px 0 0;
+display:grid;
+place-items:center;
+background:#050912
+}
+.loader{
+font-size:25px;
+font-weight:900;
+animation:pulse 1s infinite
+}
+@keyframes pulse{
+50%{opacity:.35;transform:scale(1.05)}
+}
+footer{
+padding:50px;text-align:center;
+color:#63788f
+}
+@media(max-width:800px){
+header{flex-wrap:wrap}
+nav{order:3;width:100%}
+.search{flex:1}
+.stats{grid-template-columns:repeat(2,1fr)}
+.hero{padding:30px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+🎮 YTBLEBOSS <span>GAMES</span>
+</div>
+
+<nav>
+<button class="active" onclick="home()">🏠 Accueil</button>
+<button onclick="filter('all')">🔥 Jeux</button>
+<button onclick="randomGame()">🎲 Surprise</button>
+</nav>
+
+<input
+id="search"
+class="search"
+placeholder="🔎 Rechercher un jeu..."
+oninput="render()">
+
+</header>
+
+<main>
+
+<section class="hero">
+
+<h1>
+TON ARCADE.<br>
+TES JEUX.<br>
+🔥 MAINTENANT.
+</h1>
+
+<p>
+YTBLEBOSS GAMES est un portail arcade qui regroupe
+des jeux HTML5 open-source jouables directement dans
+ton navigateur.
+</p>
+
+<button onclick="randomGame()">
+🚀 JOUER À UN JEU ALÉATOIRE
+</button>
+
+<div class="stats">
+
+<div class="stat">
+<b id="gameCount">114+</b>
+<br>🎮 Jeux
+</div>
+
+<div class="stat">
+<b>⚡</b>
+<br>Instantané
+</div>
+
+<div class="stat">
+<b>💾</b>
+<br>Scores locaux
+</div>
+
+<div class="stat">
+<b>🖥️</b>
+<br>PC + Mobile
+</div>
+
+</div>
+
+</section>
+
+<div class="toolbar">
+
+<button class="category activeCat" onclick="filter('all')">
+🔥 Tous
+</button>
+
+<button class="category" onclick="filter('arcade')">
+👾 Arcade
+</button>
+
+<button class="category" onclick="filter('action')">
+💥 Action
+</button>
+
+<button class="category" onclick="filter('puzzle')">
+🧠 Puzzle
+</button>
+
+<button class="category" onclick="filter('classic')">
+🏆 Classiques
+</button>
+
+<button class="category" onclick="favorites()">
+⭐ Favoris
+</button>
+
+</div>
+
+<h2>🎮 Jeux</h2>
+
+<div id="games" class="grid"></div>
+
+</main>
+
+<footer>
+🎮 YTBLEBOSS GAMES
+<br><br>
+Jeux issus de projets open-source compatibles avec leur licence.
+</footer>
+
+<div id="player">
+
+<div class="playerHead">
+
+<button onclick="closeGame()">
+← MENU
+</button>
+
+<div id="playerTitle" class="playerTitle">
+Chargement...
+</div>
+
+<button onclick="fullscreen()">
+⛶
+</button>
+
+</div>
+
+<div class="loading" id="loading">
+<div class="loader">
+🎮 CHARGEMENT DU JEU...
+</div>
+</div>
+
+<iframe id="frame"></iframe>
+
+</div>
+
+<script>
+
+/*
+========================================================
+YTBLEBOSS GAMES
+PORTAIL DE JEUX HTML5
+========================================================
+
+Les jeux sont chargés depuis le dépôt 90s-games.
+
+Le dépôt annonce :
+- 114 jeux
+- HTML5 Canvas
+- fichiers autonomes
+- zéro dépendance
+- licence MIT
+
+========================================================
+*/
+
+const BASE=
+"https://prateek121.github.io/90s-games/games/";
+
+/*
+--------------------------------------------------------
+CATALOGUE
+--------------------------------------------------------
+*/
+
+const games=[
+
+["asteroids","☄️","Asteroids","Arcade","classic","#19b8ff","#102e55"],
+["tetris","🧱","Tetris","Puzzle","classic","#9b5cff","#29134e"],
+["snake","🐍","Snake","Arcade","classic","#42e66d","#123f25"],
+["pacman","🟡","Pac-Man","Arcade","classic","#ffd83d","#542f0c"],
+["space-invaders","👾","Space Invaders","Action","classic","#ff4c68","#531329"],
+["2048","🔢","2048","Puzzle","puzzle","#ff9c38","#54260d"],
+["minesweeper","💣","Minesweeper","Puzzle","puzzle","#8294aa","#202a38"],
+["sokoban","📦","Sokoban","Puzzle","puzzle","#d69a45","#4c2b0d"],
+["bullet-hell","💥","Bullet Hell","Action","action","#ff3ee6","#491344"],
+["vaporwave-escape","🌴","Vaporwave Escape","Arcade","arcade","#7c4dff","#16235d"],
+
+["pong","🏓","Pong","Arcade","classic","#43d9ff","#123f54"],
+["breakout","🧱","Breakout","Arcade","classic","#ff7043","#542014"],
+["flappy","🐦","Flappy Bird","Arcade","arcade","#6ee7ff","#163f55"],
+["frogger","🐸","Frogger","Action","arcade","#54e36c","#16451e"],
+["missile-command","🚀","Missile Command","Action","action","#ff5252","#4a1515"],
+["defender","🛸","Defender","Action","action","#8b7cff","#251f5b"],
+["asteroids","☄️","Asteroids","Arcade","classic","#19b8ff","#102e55"],
+["brick-breaker","🏓","Brick Breaker","Arcade","classic","#f59e0b","#4b2b05"],
+["maze","🌀","Maze Runner","Puzzle","puzzle","#00e5ff","#073d46"],
+["memory","🧠","Memory","Puzzle","puzzle","#ff5ccf","#50173f"]
+
+];
+
+/*
+--------------------------------------------------------
+FALLBACK / ALIAS
+--------------------------------------------------------
+*/
+
+const aliases={
+"flappy":"flappy-bird",
+"brick-breaker":"breakout"
+};
+
+/*
+--------------------------------------------------------
+RENDER
+--------------------------------------------------------
+*/
+
+let currentFilter="all";
+
+function render(){
+
+const query=
+document.getElementById("search")
+.value
+.toLowerCase();
+
+const container=
+document.getElementById("games");
+
+container.innerHTML="";
+
+let list=
+games.filter(g=>{
+
+const matchSearch=
+g[2].toLowerCase()
+.includes(query);
+
+const matchFilter=
+currentFilter==="all"||
+g[3].toLowerCase()===currentFilter||
+g[4]===currentFilter;
+
+return matchSearch&&matchFilter;
+
+});
+
+list.forEach(g=>{
+
+const id=g[0];
+const fav=
+localStorage.getItem("fav_"+id)==="1";
+
+const card=
+document.createElement("article");
+
+card.className="card";
+
+card.innerHTML=`
+
+<div
+class="cover"
+style="
+--a:${g[5]};
+--b:${g[6]}
+">
+
+${g[1]}
+
+</div>
+
+<div class="body">
+
+<button
+class="fav"
+onclick="toggleFav('${id}')">
+
+${fav?"⭐":"☆"}
+
+</button>
+
+<h3>${g[2]}</h3>
+
+<p>
+🎮 ${g[3]}
+<br>
+⚡ Jouable directement
+</p>
+
+<button
+class="play"
+onclick="openGame('${id}','${g[2]}')">
+
+▶️ JOUER
+
+</button>
+
+</div>
+
+`;
+
+container.appendChild(card);
+
+});
+
+}
+
+/*
+--------------------------------------------------------
+FILTER
+--------------------------------------------------------
+*/
+
+function filter(type){
+
+currentFilter=type;
+
+document
+.querySelectorAll(".category")
+.forEach(b=>
+b.classList.remove("activeCat")
+);
+
+event?.target?.classList.add("activeCat");
+
+render();
+
+}
+
+/*
+--------------------------------------------------------
+FAVORIS
+--------------------------------------------------------
+*/
+
+function toggleFav(id){
+
+const key="fav_"+id;
+
+if(localStorage.getItem(key)==="1")
+localStorage.removeItem(key);
+else
+localStorage.setItem(key,"1");
+
+render();
+
+}
+
+function favorites(){
+
+currentFilter="favorites";
+
+const container=
+document.getElementById("games");
+
+container.innerHTML="";
+
+games
+.filter(g=>
+localStorage.getItem("fav_"+g[0])==="1"
+)
+.forEach(g=>{
+
+const card=
+document.createElement("article");
+
+card.className="card";
+
+card.innerHTML=`
+
+<div
+class="cover"
+style="
+--a:${g[5]};
+--b:${g[6]}
+">
+
+${g[1]}
+
+</div>
+
+<div class="body">
+
+<h3>${g[2]}</h3>
+
+<p>⭐ Favori</p>
+
+<button
+class="play"
+onclick="openGame('${g[0]}','${g[2]}')">
+
+▶️ JOUER
+
+</button>
+
+</div>
+`;
+
+container.appendChild(card);
+
+});
+
+}
+
+/*
+--------------------------------------------------------
+OPEN GAME
+--------------------------------------------------------
+*/
+
+function openGame(id,title){
+
+const realId=
+aliases[id]||id;
+
+const url=
+BASE+
+realId+
+".html";
+
+document
+.getElementById("playerTitle")
+.textContent=
+"🎮 "+title;
+
+document
+.getElementById("player")
+.style.display="block";
+
+document
+.getElementById("loading")
+.style.display="grid";
+
+const frame=
+document.getElementById("frame");
+
+frame.src=url;
+
+frame.onload=()=>{
+
+document
+.getElementById("loading")
+.style.display="none";
+
+};
+
+}
+
+/*
+--------------------------------------------------------
+CLOSE
+--------------------------------------------------------
+*/
+
+function closeGame(){
+
+const player=
+document.getElementById("player");
+
+player.style.display="none";
+
+document
+.getElementById("frame")
+.src="about:blank";
+
+}
+
+/*
+--------------------------------------------------------
+FULLSCREEN
+--------------------------------------------------------
+*/
+
+function fullscreen(){
+
+const frame=
+document.getElementById("frame");
+
+if(frame.requestFullscreen)
+frame.requestFullscreen();
+
+}
+
+/*
+--------------------------------------------------------
+RANDOM
+--------------------------------------------------------
+*/
+
+function randomGame(){
+
+const g=
+games[
+Math.floor(
+Math.random()*games.length
+)
+];
+
+openGame(
+g[0],
+g[2]
+);
+
+}
+
+/*
+--------------------------------------------------------
+HOME
+--------------------------------------------------------
+*/
+
+function home(){
+
+closeGame();
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+}
+
+/*
+--------------------------------------------------------
+START
+--------------------------------------------------------
+*/
+
+render();
+
+</script>
+
+</body>
+</html>
